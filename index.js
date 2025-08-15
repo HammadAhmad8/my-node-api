@@ -5,7 +5,7 @@ const express = require('express');
 // const mongoose = require('mongoose'); // MongoDB - kept commented
 const cors = require('cors');
 const multer = require('multer');
-const TaskModel = require('./task'); //  path 
+const TaskModel = require('./Task'); //  path 
 
 const app = express();
 const PORT = process.env.PORT || 3003; 
