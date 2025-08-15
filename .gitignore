@@ -2,8 +2,11 @@
 node_modules/
 
 # Environment variables
+# Environment variables
 .env
-.env.*
+.env.local
+.env.test
+
 
 # Build & cache
 dist/
