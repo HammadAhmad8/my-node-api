@@ -11,6 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 3003; // Use .env value or default 3003
 
 // Middleware
+// hello
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
