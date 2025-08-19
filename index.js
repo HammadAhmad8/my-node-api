@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 const upload = multer();
 
 /* ---------------- MongoDB Connection ---------------- */
-const mongoURI = process.env.MONGO_URI;
+const mongoURI = "mongodb+srv://HAMMAD:Qazi123@notes.5fcl9g9.mongodb.net/myTasksDB?retryWrites=true&w=majority&appName=notes";
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
