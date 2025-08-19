@@ -1,19 +1,15 @@
-/*
----------------- MongoDB code (commented out) ----------------
+// ---------------- MongoDB Model ----------------
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
-  text: {
-    type: String,
-    required: true
-  }
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  author: { type: String, required: true }
 });
 
 module.exports = mongoose.model('Task', taskSchema);
---------------------------------------------------------------
-*/
 
-// ---------------- PostgreSQL code ----------------
+/* ---------------- PostgreSQL Model (Commented for backup) ----------------
 const pool = require('./db'); // ✅ Correct path
 
 const TaskModel = {
@@ -45,3 +41,4 @@ const TaskModel = {
 };
 
 module.exports = TaskModel;
+--------------------------------------------------------------------------- */

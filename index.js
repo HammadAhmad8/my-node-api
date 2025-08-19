@@ -2,46 +2,40 @@
 require('dotenv').config();
 
 const express = require('express');
-// const mongoose = require('mongoose'); // MongoDB - kept commented
+const mongoose = require('mongoose'); // ✅ MongoDB enabled
 const cors = require('cors');
 const multer = require('multer');
-const TaskModel = require('./Task'); //  path 
+const TaskModel = require('./Task'); // path 
 
 const app = express();
 const PORT = process.env.PORT || 3003; 
 
 // Middleware
-// hello
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const upload = multer();
 
-/* ---------------- MongoDB Connection (Commented Out for backup) ----------------
-const mongoURI = "mongodb+srv://HAMMAD:Qazi123@notes.5fcl9g9.mongodb.net/myTasksDB?retryWrites=true&w=majority&appName=notes";
+/* ---------------- MongoDB Connection ---------------- */
+const mongoURI = process.env.MONGO_URI;
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('✅ Connected to MongoDB'))
+.then(() => console.log('✅ Connected to MongoDB Atlas'))
 .catch(err => console.error('❌ MongoDB connection error:', err));
 
-const taskSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  author: { type: String, required: true }
-});
+/* ---------------- PostgreSQL Connection (Commented for backup) ----------------
+const pool = require('./db');
+--------------------------------------------------------------------------------- */
 
-const Task = mongoose.model('Task', taskSchema);
------------------------------------------------------------------------------------- */
-
-// Routes using PostgreSQL model
+// Routes using MongoDB model
 
 // Get all notes
 app.get('/api/notes', async (req, res) => {
   try {
-    const tasks = await TaskModel.getAll();
+    const tasks = await TaskModel.find();
     res.json(tasks);
   } catch (err) {
     console.error(err);
@@ -56,7 +50,8 @@ app.post('/api/notes', upload.none(), async (req, res) => {
     if (!title || !description || !author) {
       return res.status(400).json({ message: '⚠️ All fields are required' });
     }
-    const newTask = await TaskModel.create({ title, description, author });
+    const newTask = new TaskModel({ title, description, author });
+    await newTask.save();
     res.status(201).json(newTask);
   } catch (err) {
     console.error(err);
@@ -67,7 +62,7 @@ app.post('/api/notes', upload.none(), async (req, res) => {
 // Delete a note
 app.delete('/api/notes/:id', async (req, res) => {
   try {
-    const deleted = await TaskModel.delete(req.params.id);
+    const deleted = await TaskModel.findByIdAndDelete(req.params.id);
     if (!deleted) {
       return res.status(404).json({ message: '❌ Note not found' });
     }
@@ -85,7 +80,11 @@ app.put('/api/notes/:id', upload.none(), async (req, res) => {
     if (!title || !description || !author) {
       return res.status(400).json({ message: '⚠️ All fields are required' });
     }
-    const updated = await TaskModel.update(req.params.id, { title, description, author });
+    const updated = await TaskModel.findByIdAndUpdate(
+      req.params.id,
+      { title, description, author },
+      { new: true }
+    );
     if (!updated) {
       return res.status(404).json({ message: '❌ Note not found' });
     }
@@ -98,7 +97,7 @@ app.put('/api/notes/:id', upload.none(), async (req, res) => {
 
 // Root test route
 app.get('/', (req, res) => {
-  res.send('✅ Backend is working with PostgreSQL. Use /api/notes for data.');
+  res.send('✅ Backend is working with MongoDB Atlas. Use /api/notes for data.');
 });
 
 // Start server

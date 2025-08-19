@@ -1,3 +1,4 @@
+/* ---------------- PostgreSQL Connection (Commented for backup) ----------------
 require('dotenv').config(); // Load environment variables
 const { Pool } = require('pg');
 
@@ -10,3 +11,6 @@ const pool = new Pool({
 });
 
 module.exports = pool;
+--------------------------------------------------------------------------- */
+
+// ✅ Not needed for MongoDB
