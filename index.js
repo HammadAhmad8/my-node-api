@@ -5,7 +5,7 @@ const express = require('express');
 const mongoose = require('mongoose'); // ✅ MongoDB enabled
 const cors = require('cors');
 const multer = require('multer');
-const TaskModel = require('./Task'); // path 
+const TaskModel = require('./Task'); // path to your Mongoose model
 
 const app = express();
 const PORT = process.env.PORT || 3003; 
@@ -17,14 +17,11 @@ app.use(express.urlencoded({ extended: true }));
 const upload = multer();
 
 /* ---------------- MongoDB Connection ---------------- */
-const mongoURI = "mongodb+srv://HAMMAD:Qazi123@notes.5fcl9g9.mongodb.net/myTasksDB?retryWrites=true&w=majority&appName=notes";
+const mongoURI = process.env.MONGO_URI; // get from .env
 
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('✅ Connected to MongoDB Atlas'))
-.catch(err => console.error('❌ MongoDB connection error:', err));
+mongoose.connect(mongoURI)
+  .then(() => console.log('✅ Connected to MongoDB Atlas'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
 
 /* ---------------- PostgreSQL Connection (Commented for backup) ----------------
 const pool = require('./db');
